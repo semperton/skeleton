@@ -1,0 +1,2 @@
+# skeleton
+Semperton application template.
