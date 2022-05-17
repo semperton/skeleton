@@ -1,0 +1,58 @@
+<?php
+
+declare(strict_types=1);
+
+use App\Config\ArrayConfig;
+use App\Config\ConfigInterface;
+use Nyholm\Psr7\Factory\Psr17Factory;
+use Nyholm\Psr7Server\ServerRequestCreator;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Semperton\Framework\Application;
+
+return [
+	ConfigInterface::class => static function () {
+
+		/** @var array */
+		$config = require __DIR__ . '/config.php';
+		$env = __DIR__ . '/../env.php';
+
+		if (is_file($env)) {
+
+			$override = require $env;
+
+			if (is_array($override)) {
+				$config = array_merge($config, $override);
+			}
+		}
+
+		return new ArrayConfig($config);
+	},
+
+	ResponseFactoryInterface::class => static fn (Psr17Factory $factory) => $factory,
+	'ServerRequestCreator' => static function (Psr17Factory $factory) {
+
+		$requestCreator = new ServerRequestCreator($factory, $factory, $factory, $factory);
+
+		return [$requestCreator, 'fromGlobals'];
+	},
+
+	Application::class => static function (ResponseFactoryInterface $responseFactory) {
+
+		$application = new Application(
+			$responseFactory
+		);
+
+		// apply routes
+		/** @var Closure */
+		$callback = require __DIR__ . '/routes.php';
+		$callback($application);
+
+		// add middleware
+		$application->addErrorMiddleware();
+		$application->addRoutingMiddleware();
+		$application->addConditionalMiddleware();
+		$application->addActionMiddleware();
+
+		return $application;
+	}
+];
