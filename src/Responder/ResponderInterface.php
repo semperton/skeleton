@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Semperton\Framework\Interfaces;
+namespace App\Responder;
 
+use App\Payload\PayloadInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
