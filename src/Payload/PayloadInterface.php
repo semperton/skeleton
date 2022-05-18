@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Semperton\Framework\Interfaces;
+namespace App\Payload;
 
 interface PayloadInterface
 {

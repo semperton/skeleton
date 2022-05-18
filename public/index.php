@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Semperton\Framework\Application;
 
 // php dev server
@@ -20,6 +21,7 @@ $container = require __DIR__ . '/../app/bootstrap.php';
 $application = $container->get(Application::class);
 
 // FIXME: use request creator class
+/** @var ServerRequestInterface */
 $request = ($container->get('ServerRequestCreator'))();
 
 $application->run($request);

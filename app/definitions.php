@@ -6,8 +6,10 @@ use App\Config\ArrayConfig;
 use App\Config\ConfigInterface;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7Server\ServerRequestCreator;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Semperton\Framework\Application;
+use Semperton\Framework\CommonResolver;
 
 return [
 	ConfigInterface::class => static function () {
@@ -36,22 +38,25 @@ return [
 		return [$requestCreator, 'fromGlobals'];
 	},
 
-	Application::class => static function (ResponseFactoryInterface $responseFactory) {
+	Application::class => static function (ContainerInterface $container, ResponseFactoryInterface $responseFactory) {
+
+		$resolver = new CommonResolver($container);
 
 		$application = new Application(
-			$responseFactory
+			$responseFactory,
+			$resolver,
+			$resolver
 		);
 
 		// apply routes
 		/** @var Closure */
-		$callback = require __DIR__ . '/routes.php';
-		$callback($application);
+		$routeCallback = require __DIR__ . '/routes.php';
+		$routeCallback($application);
 
 		// add middleware
-		$application->addErrorMiddleware();
-		$application->addRoutingMiddleware();
-		$application->addConditionalMiddleware();
-		$application->addActionMiddleware();
+		/** @var Closure */
+		$middlewareCallback = require __DIR__ . '/middleware.php';
+		$middlewareCallback($application);
 
 		return $application;
 	}
