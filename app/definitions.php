@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Config\ArrayConfig;
 use App\Config\ConfigInterface;
+use App\Middleware\PerformanceMiddleware;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7Server\ServerRequestCreator;
 use Psr\Container\ContainerInterface;
@@ -40,13 +41,9 @@ return [
 
 	Application::class => static function (ContainerInterface $container, ResponseFactoryInterface $responseFactory) {
 
-		$resolver = new CommonResolver($container);
+		$commonResolver = new CommonResolver($container);
 
-		$application = new Application(
-			$responseFactory,
-			$resolver,
-			$resolver
-		);
+		$application = new Application($responseFactory, null, $commonResolver);
 
 		// apply routes
 		/** @var Closure */
@@ -59,5 +56,9 @@ return [
 		$middlewareCallback($application);
 
 		return $application;
+	},
+
+	PerformanceMiddleware::class => static function () {
+		return new PerformanceMiddleware(START_TIME);
 	}
 ];

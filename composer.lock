@@ -523,12 +523,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/semperton/framework.git",
-                "reference": "7b682d1b1a487ad50b1cbf6b49f93e9b2eaeea31"
+                "reference": "2668fe8b636a45975dd24c305f2d0095e3a68832"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/semperton/framework/zipball/7b682d1b1a487ad50b1cbf6b49f93e9b2eaeea31",
-                "reference": "7b682d1b1a487ad50b1cbf6b49f93e9b2eaeea31",
+                "url": "https://api.github.com/repos/semperton/framework/zipball/2668fe8b636a45975dd24c305f2d0095e3a68832",
+                "reference": "2668fe8b636a45975dd24c305f2d0095e3a68832",
                 "shasum": ""
             },
             "require": {
@@ -562,7 +562,7 @@
                 "issues": "https://github.com/semperton/framework/issues",
                 "source": "https://github.com/semperton/framework/tree/main"
             },
-            "time": "2022-05-18T19:35:50+00:00"
+            "time": "2022-05-24T10:12:47+00:00"
         },
         {
             "name": "semperton/routing",
@@ -570,16 +570,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/semperton/routing.git",
-                "reference": "f7695fe9c610aae66d4f44c37d5c1c43c3ea31e3"
+                "reference": "f6b3df3861558c97613c7cb151cc65a0e62777d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/semperton/routing/zipball/f7695fe9c610aae66d4f44c37d5c1c43c3ea31e3",
-                "reference": "f7695fe9c610aae66d4f44c37d5c1c43c3ea31e3",
+                "url": "https://api.github.com/repos/semperton/routing/zipball/f6b3df3861558c97613c7cb151cc65a0e62777d2",
+                "reference": "f6b3df3861558c97613c7cb151cc65a0e62777d2",
                 "shasum": ""
             },
             "require": {
-                "php": ">= 7.2"
+                "ext-ctype": "*",
+                "php": ">= 7.4",
+                "psr/http-message": "^1.0"
             },
             "require-dev": {
                 "phpbench/phpbench": "^1.0",
@@ -602,7 +604,7 @@
                 "issues": "https://github.com/semperton/routing/issues",
                 "source": "https://github.com/semperton/routing/tree/main"
             },
-            "time": "2022-05-17T15:35:00+00:00"
+            "time": "2022-05-24T09:26:25+00:00"
         }
     ],
     "packages-dev": [
