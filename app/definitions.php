@@ -7,6 +7,7 @@ use App\Config\ConfigInterface;
 use App\Web\Middleware\PerformanceMiddleware;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7Server\ServerRequestCreator;
+use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Semperton\Framework\Application;
@@ -32,11 +33,9 @@ return [
 	},
 
 	ResponseFactoryInterface::class => static fn (Psr17Factory $factory) => $factory,
-	'ServerRequestCreator' => static function (Psr17Factory $factory) {
+	ServerRequestCreatorInterface::class => static function (Psr17Factory $factory) {
 
-		$requestCreator = new ServerRequestCreator($factory, $factory, $factory, $factory);
-
-		return [$requestCreator, 'fromGlobals'];
+		return new ServerRequestCreator($factory, $factory, $factory, $factory);
 	},
 
 	Application::class => static function (ContainerInterface $container, ResponseFactoryInterface $responseFactory) {
