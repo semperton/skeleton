@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-use App\Action\IndexAction;
-use App\Action\NameAction;
+use App\Web\Action\IndexAction;
+use App\Web\Action\ApiAction;
+use App\Web\Middleware\CORSMiddleware;
 use Semperton\Framework\Interfaces\RouteCollectorInterface;
 
 return static function (RouteCollectorInterface $index) {
 
 	$index->get('/', IndexAction::class);
-	$index->get('/name/:name:w', NameAction::class);
+	$index->get('/:name', IndexAction::class);
+	$index->get('/api', ApiAction::class, [CORSMiddleware::class]);
 };

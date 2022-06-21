@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Action;
+namespace App\Web\Action;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -21,7 +21,7 @@ final class IndexAction implements ActionInterface
 	public function process(ServerRequestInterface $request, array $args): ResponseInterface
 	{
 		$response = $this->responseFactory->createResponse();
-		$response->getBody()->write('Hello World');
+		$response->getBody()->write('Hello ' . ucfirst($args['name'] ?? 'World'));
 
 		return $response;
 	}

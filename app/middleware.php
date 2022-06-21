@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Middleware\PerformanceMiddleware;
+use App\Web\Middleware\PerformanceMiddleware;
 use Semperton\Framework\Application;
 
 return static function (Application $app) {

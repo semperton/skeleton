@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Responder;
+namespace App\Web\Responder;
 
 use App\Payload\PayloadInterface;
 use Psr\Http\Message\ServerRequestInterface;

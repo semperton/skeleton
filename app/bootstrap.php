@@ -7,7 +7,10 @@ use Semperton\Container\Container;
 
 define('START_TIME', microtime(true));
 
-// set some php system defaults
+// set some php defaults
+
+ini_set('precision', '-1');
+
 date_default_timezone_set('UTC');
 
 /** @var ClassLoader */

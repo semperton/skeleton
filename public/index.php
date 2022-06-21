@@ -14,6 +14,14 @@ if (php_sapi_name() === 'cli-server') {
 	}
 }
 
+// shutdown handler
+// register_shutdown_function(static function () {
+
+// 	if (null === $error = error_get_last()) {
+// 		return;
+// 	}
+// });
+
 /** @var ContainerInterface */
 $container = require __DIR__ . '/../app/bootstrap.php';
 
