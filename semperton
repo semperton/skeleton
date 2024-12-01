@@ -22,6 +22,7 @@ switch ($command) {
     case 'stop':
     case 'reload':
     case 'status':
+    case 'connections':
         /** @var ApplicationServer */
         $server = $container->get(ApplicationServer::class);
         Worker::runAll();

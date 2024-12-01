@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Web;
 
+use App\Config\ConfigInterface;
 use HttpSoft\Message\ServerRequest;
 use HttpSoft\Message\StreamFactory;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 use Semperton\Framework\Application;
 use stdClass;
 use Workerman\Connection\TcpConnection;
@@ -21,11 +23,17 @@ final class ApplicationServer
 
     public function __construct(
         protected Application $application,
-        protected StreamFactory $streamFactory
+        protected StreamFactory $streamFactory,
+        protected ConfigInterface $config
     ) {
-        $this->httpWorker = new Worker('http://0.0.0.0:8080');
+        $httpConfig = $config->getConfig('http');
+        $httpAddress = $httpConfig->getString('address');
+        $httpPort = $httpConfig->getInt('port');
+        $httpWorkers = $httpConfig->getInt('workers');
+
+        $this->httpWorker = new Worker("http://$httpAddress:$httpPort");
         $this->httpWorker->name = 'http';
-        $this->httpWorker->count = 4;
+        $this->httpWorker->count = $httpWorkers;
         // $this->httpWorker->reusePort = true;
 
         $this->httpWorker->onMessage = [$this, 'handleRequest'];
@@ -109,38 +117,43 @@ final class ApplicationServer
             $body->rewind();
         }
 
-        $connection->context = $connection->context ?? new stdClass;
-        $connection->context->bufferFull = false;
-        $writeFunc = static function () use ($body, $connection, $shouldChunk): void {
+        $context = new stdClass;
+        $context->bufferFull = false;
+        $context->chunked = $shouldChunk;
+        $connection->onBufferFull = static function () use ($context): void {
+            $context->bufferFull = true;
+        };
+
+        $connection->onBufferDrain = function (TcpConnection $conn) use ($body, $context): void {
+            $context->bufferFull = false;
+            $this->writeBody($body, $conn, $context);
+        };
+
+        $this->writeBody($body, $connection, $context);
+    }
+
+    protected function writeBody(
+        StreamInterface $body,
+        TcpConnection $connection,
+        object $context
+    ): void {
+        $eof = $body->eof();
+        while (
+            $connection->getStatus() === TcpConnection::STATUS_ESTABLISHED &&
+            !$context->bufferFull &&
+            !$eof
+        ) {
+            $data = $body->read(4096);
             $eof = $body->eof();
-            while (
-                $connection->getStatus() === TcpConnection::STATUS_ESTABLISHED &&
-                !$connection->context->bufferFull &&
-                !$eof
-            ) {
-                $data = $body->read(4096);
-                $eof = $body->eof();
-                if ($shouldChunk) {
-                    $size = dechex(strlen($data));
-                    $connection->send("$size\r\n$data\r\n", true);
-                    if ($eof) {
-                        $connection->send("0\r\n\r\n", true);
-                    }
-                } else {
-                    $connection->send($data, true);
+            if ($context->chunked) {
+                $size = dechex(strlen($data));
+                $connection->send("$size\r\n$data\r\n", true);
+                if ($eof) {
+                    $connection->send("0\r\n\r\n", true);
                 }
+            } else {
+                $connection->send($data, true);
             }
-        };
-
-        $connection->onBufferFull = static function () use ($connection): void {
-            $connection->context->bufferFull = true;
-        };
-
-        $connection->onBufferDrain = static function () use ($writeFunc, $connection): void {
-            $connection->context->bufferFull = false;
-            $writeFunc();
-        };
-
-        $writeFunc();
+        }
     }
 }
