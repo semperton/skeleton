@@ -1,0 +1,31 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use App\Web\ApplicationServer;
+use Psr\Container\ContainerInterface;
+use Workerman\Worker;
+
+if (php_sapi_name() !== 'cli') {
+    return;
+}
+
+/** @var ContainerInterface */
+$container = require_once __DIR__ . '/config/bootstrap.php';
+
+$command = $argv[1] ?? null;
+switch ($command) {
+    case 'restart':
+        Worker::$daemonize = true;
+    case 'start':
+    case 'stop':
+    case 'reload':
+    case 'status':
+        /** @var ApplicationServer */
+        $server = $container->get(ApplicationServer::class);
+        Worker::runAll();
+        break;
+    default:
+        echo "No valid command given\n";
+}

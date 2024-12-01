@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Web\Responder;
 
-use App\Payload\PayloadInterface;
+use App\Domain\PayloadInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 

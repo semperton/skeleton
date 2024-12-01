@@ -11,18 +11,11 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 final class PerformanceMiddleware implements MiddlewareInterface
 {
-	protected float $startTime;
-
-	public function __construct(?float $startTime = null)
-	{
-		$this->startTime = $startTime ?? microtime(true);
-	}
-
 	public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
 	{
+		$startTime = microtime(true);
 		$response = $handler->handle($request);
-
-		$runtime = (microtime(true) - $this->startTime) * 1000; // ms
+		$runtime = (microtime(true) - $startTime) / 1000; // ms
 
 		$memory = memory_get_peak_usage() / 1024 / 1024; // MB
 
