@@ -10,7 +10,6 @@ use HttpSoft\Message\StreamFactory;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Semperton\Framework\Application;
-use stdClass;
 use Workerman\Connection\TcpConnection;
 use Workerman\Protocols\Http\Request;
 use Workerman\Worker;
@@ -117,35 +116,33 @@ final class ApplicationServer
             $body->rewind();
         }
 
-        $context = new stdClass;
-        $context->bufferFull = false;
-        $context->chunked = $shouldChunk;
-        $connection->onBufferFull = static function () use ($context): void {
-            $context->bufferFull = true;
+        $connection->bufferFull = false;
+        $connection->chunked = $shouldChunk;
+        $connection->onBufferFull = static function (TcpConnection $conn): void {
+            $conn->bufferFull = true;
         };
 
-        $connection->onBufferDrain = function (TcpConnection $conn) use ($body, $context): void {
-            $context->bufferFull = false;
-            $this->writeBody($body, $conn, $context);
+        $connection->onBufferDrain = function (TcpConnection $conn) use ($body): void {
+            $conn->bufferFull = false;
+            $this->writeBody($body, $conn);
         };
 
-        $this->writeBody($body, $connection, $context);
+        $this->writeBody($body, $connection);
     }
 
     protected function writeBody(
         StreamInterface $body,
-        TcpConnection $connection,
-        object $context
+        TcpConnection $connection
     ): void {
         $eof = $body->eof();
         while (
             $connection->getStatus() === TcpConnection::STATUS_ESTABLISHED &&
-            !$context->bufferFull &&
+            !$connection->bufferFull &&
             !$eof
         ) {
             $data = $body->read(4096);
             $eof = $body->eof();
-            if ($context->chunked) {
+            if ($connection->chunked) {
                 $size = dechex(strlen($data));
                 $connection->send("$size\r\n$data\r\n", true);
                 if ($eof) {

@@ -16,4 +16,7 @@
             <directory name="vendor" />
         </ignoreFiles>
     </projectFiles>
+    <universalObjectCrates>
+        <class name="Workerman\Connection\TcpConnection" />
+    </universalObjectCrates>
 </psalm>
