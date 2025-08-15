@@ -16,6 +16,7 @@ final class IndexAction implements ActionInterface
 		protected JsonResponder $jsonResponder
 	) {}
 
+	#[\Override]
 	public function process(ServerRequestInterface $request, array $args): ResponseInterface
 	{
 		$payload = new Payload(Payload::STATUS_SUCCESS, [

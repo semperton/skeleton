@@ -18,6 +18,7 @@ final class ApiAction implements ActionInterface
 		$this->responseFactory = $responseFactory;
 	}
 
+	#[\Override]
 	public function process(ServerRequestInterface $request, array $args): ResponseInterface
 	{
 		$response = $this->responseFactory->createResponse();

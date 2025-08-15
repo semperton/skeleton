@@ -21,6 +21,7 @@ final class Payload implements PayloadInterface
         $this->output = $output;
     }
 
+    #[\Override]
     public function withStatus(string $status): PayloadInterface
     {
         $payload = clone $this;
@@ -28,11 +29,13 @@ final class Payload implements PayloadInterface
         return $payload;
     }
 
+    #[\Override]
     public function getStatus(): string
     {
         return $this->status;
     }
 
+    #[\Override]
     public function withInput(mixed $input): PayloadInterface
     {
         $payload = clone $this;
@@ -40,11 +43,13 @@ final class Payload implements PayloadInterface
         return $payload;
     }
 
+    #[\Override]
     public function getInput(): mixed
     {
         return $this->input;
     }
 
+    #[\Override]
     public function withOutput(mixed $output): PayloadInterface
     {
         $payload = clone $this;
@@ -52,11 +57,13 @@ final class Payload implements PayloadInterface
         return $payload;
     }
 
+    #[\Override]
     public function getOutput(): mixed
     {
         return $this->output;
     }
 
+    #[\Override]
     public function withMessages(array $messages): PayloadInterface
     {
         $payload = clone $this;
@@ -67,6 +74,7 @@ final class Payload implements PayloadInterface
     /**
      * @return string[]
      */
+    #[\Override]
     public function getMessages(): array
     {
         return $this->messages;

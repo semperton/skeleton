@@ -10,6 +10,7 @@ use Psr\Http\Message\ResponseInterface;
 
 final class JsonResponder extends BaseResponder
 {
+    #[\Override]
     public function render(
         ServerRequestInterface $request,
         PayloadInterface $payload

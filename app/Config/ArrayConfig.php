@@ -31,42 +31,49 @@ final class ArrayConfig implements ConfigInterface
 		throw new OutOfBoundsException("No config entry found for < $key >");
 	}
 
+	#[\Override]
 	public function getString(string $key): string
 	{
 		/** @var string */
 		return $this->get($key);
 	}
 
+	#[\Override]
 	public function getBool(string $key): bool
 	{
 		/** @var bool */
 		return $this->get($key);
 	}
 
+	#[\Override]
 	public function getInt(string $key): int
 	{
 		/** @var int */
 		return $this->get($key);
 	}
 
+	#[\Override]
 	public function getFloat(string $key): float
 	{
 		/** @var float */
 		return $this->get($key);
 	}
 
+	#[\Override]
 	public function getArray(string $key): array
 	{
 		/** @var array */
 		return $this->get($key);
 	}
 
+	#[\Override]
 	public function getObject(string $key): object
 	{
 		/** @var object */
 		return $this->get($key);
 	}
 
+	#[\Override]
 	public function getConfig(string $key): ConfigInterface
 	{
 		/** @var mixed */
