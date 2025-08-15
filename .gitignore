@@ -1,2 +1,4 @@
 /vendor
 /env.php
+/workerman.log
+/workerman.semperton.pid
