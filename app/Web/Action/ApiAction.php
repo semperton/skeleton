@@ -22,7 +22,7 @@ final class ApiAction implements ActionInterface
 	public function process(ServerRequestInterface $request, array $args): ResponseInterface
 	{
 		$response = $this->responseFactory->createResponse();
-		$response->getBody()->write(json_encode([
+		$response->getBody()->write((string)json_encode([
 			'status' => 200,
 			'message' => 'Hello World'
 		]));

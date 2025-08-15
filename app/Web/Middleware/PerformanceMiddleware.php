@@ -16,9 +16,9 @@ final class PerformanceMiddleware implements MiddlewareInterface
 	{
 		$startTime = microtime(true);
 		$response = $handler->handle($request);
-		$runtime = (microtime(true) - $startTime) / 1000; // ms
+		$runtime = (microtime(true) - $startTime) / 1000.0; // ms
 
-		$memory = memory_get_peak_usage() / 1024 / 1024; // MB
+		$memory = (float)memory_get_peak_usage() / 1024.0 / 1024.0; // MB
 
 		$response = $response->withHeader('X-Runtime', (string)round($runtime, 1) . ' ms')
 			->withHeader('X-Memory', (string)round($memory, 1) . ' MB');
